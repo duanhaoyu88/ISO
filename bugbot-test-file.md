@@ -44,3 +44,66 @@ def get_user_data(user_id):
 
 ## 测试结论
 此文件用于验证Bugbot是否能正确识别代码质量问题并提供改进建议。
+
+## 新增测试代码
+
+### 4. 内存泄漏测试
+```javascript
+// 潜在的内存泄漏问题
+class EventHandler {
+    constructor() {
+        this.events = [];
+    }
+    
+    addEvent(event) {
+        this.events.push(event);
+        // 缺少事件清理机制
+    }
+    
+    // 没有清理方法
+}
+```
+
+### 5. 异步处理测试
+```javascript
+// 异步处理问题
+async function fetchData() {
+    try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error); // 应该使用更详细的错误处理
+    }
+}
+```
+
+### 6. 性能问题测试
+```javascript
+// 性能问题：不必要的重复计算
+function processArray(arr) {
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr.length; j++) {
+            // O(n²) 复杂度，可能性能问题
+            console.log(arr[i] + arr[j]);
+        }
+    }
+}
+```
+
+### 7. 代码风格测试
+```python
+# 代码风格问题
+def bad_function_name():  # 应该使用snake_case
+    x=1+2  # 缺少空格
+    if x==3:  # 缺少空格
+        print("x is 3")
+    return x
+```
+
+## 扩展预期检测问题
+6. 内存泄漏风险
+7. 异步错误处理不当
+8. 性能瓶颈
+9. 代码风格不规范
+10. 缺少类型注解
