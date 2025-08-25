@@ -35,7 +35,7 @@ from urllib.parse import urlparse
 import hashlib
 
 class MDImageLocalizer:
-    def __init__(self, source_folder='../source_md', target_folder='../Documents Md'):
+    def __init__(self, source_folder='source_md', target_folder='Documents Md'):
         self.source_folder = source_folder
         self.target_folder = target_folder
         self.images_folder = os.path.join(os.path.dirname(__file__), 'images')
@@ -305,11 +305,17 @@ class MDImageLocalizer:
                 for url, filename in self.downloaded_files.items():
                     # 替换Markdown图片语法中的URL
                     old_pattern = f'![]({url})'
-                    new_pattern = f'![](../Image_Processor/images/{filename})'
+                    # 根据目标文件夹位置计算正确的相对路径
+                    if 'ISO14230' in self.target_folder:
+                        # 如果在ISO14230子文件夹中，需要回到根目录
+                        new_pattern = f'![](../../Image_Processor/images/{filename})'
+                    else:
+                        # 如果在根目录的Documents Md中，使用原来的路径
+                        new_pattern = f'![](../Image_Processor/images/{filename})'
                     if old_pattern in content:
                         content = content.replace(old_pattern, new_pattern)
                         replacements += 1
-                        print(f"    替换: {url} -> ../Image_Processor/images/{filename}")
+                        print(f"    替换: {url} -> {new_pattern}")
                 
                 # 保存更新后的文件
                 with open(target_file, 'w', encoding='utf-8') as f:
@@ -384,8 +390,8 @@ class MDImageLocalizer:
 def main():
     """主函数"""
     # 解析命令行参数
-    source_folder = '../source_md'
-    target_folder = '../Documents Md'
+    source_folder = 'source_md'
+    target_folder = 'Documents Md'
     
     if len(sys.argv) > 1:
         source_folder = sys.argv[1]
@@ -400,8 +406,8 @@ def main():
         print("  python download_images.py [源文件夹] [目标文件夹]")
         print("")
         print("参数说明:")
-        print("  源文件夹: 包含MD文件的文件夹路径 (默认: ../source_md)")
-        print("  目标文件夹: 生成的MD文件存放位置 (默认: ../Documents Md)")
+        print("  源文件夹: 包含MD文件的文件夹路径 (默认: source_md)")
+        print("  目标文件夹: 生成的MD文件存放位置 (默认: Documents Md)")
         print("")
         print("示例:")
         print("  python download_images.py")
