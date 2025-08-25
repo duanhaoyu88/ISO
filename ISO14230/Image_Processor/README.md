@@ -1,5 +1,42 @@
 # Image_Processor 图片处理工具
 
+## 🚀 快速开始
+
+### 一句话说明
+这个脚本用于将MD文档中的在线图片链接下载到本地，并更新文档中的图片链接为本地路径。
+
+### 核心功能
+1. 从指定文件夹读取MD文件，提取图片链接
+2. 下载所有图片到本地images文件夹
+3. 复制MD文件到目标文件夹，替换图片链接为本地路径
+
+### 快速使用
+
+#### 方法1: 使用默认路径（推荐）
+```bash
+cd Image_Processor
+python download_images.py
+```
+**默认路径**:
+- 源文件夹: `../source_md` (包含原始MD文件)
+- 目标文件夹: `../Documents Md` (生成的MD文件)
+
+#### 方法2: 指定自定义路径
+```bash
+python download_images.py "源文件夹路径" "目标文件夹路径"
+```
+
+#### 实际示例
+```bash
+# 处理ISO文档
+python download_images.py "D:\01_MyGit\ISO\官网" "D:\01_MyGit\ISO\ISO14230\Documents Md"
+
+# 处理其他项目
+python download_images.py "D:\MyProject\md_source" "D:\MyProject\md_output"
+```
+
+---
+
 ## 概述
 
 这个文件夹包含了MD文档图片本地化处理的所有工具和资源文件。该工具可以将MD文档中的在线图片链接下载到本地，并更新文档中的链接，避免因网络问题导致的图片无法显示。
@@ -111,15 +148,6 @@ python download_images.py "D:\01_MyGit\ISO\官网" "D:\01_MyGit\ISO\ISO14230\Doc
 - `../pdfs/`
 - 其他常见PDF文件夹位置
 
-## 注意事项
-
-- **源文件夹要求**: 必须包含.md文件
-- **网络连接**: 需要网络连接来下载图片
-- **文件权限**: 确保有足够的权限创建文件夹和文件
-- **文件名冲突**: 脚本会自动处理文件名冲突
-- **图片验证**: 自动验证下载图片的有效性
-- **错误处理**: 包含完善的错误处理和重试机制
-
 ## 依赖要求
 
 - **Python版本**: 3.6+
@@ -182,6 +210,32 @@ pip install requests urllib3
 
 ### 批量处理
 脚本支持批量处理多个文件夹，只需多次运行即可。
+
+## 常见用法场景
+
+### 场景1: 处理ISO文档
+```bash
+python download_images.py "D:\01_MyGit\ISO\官网" "D:\01_MyGit\ISO\ISO14230\Documents Md"
+```
+
+### 场景2: 处理博客文章
+```bash
+python download_images.py "D:\Blog\posts" "D:\Blog\local_posts"
+```
+
+### 场景3: 处理技术文档
+```bash
+python download_images.py "D:\Docs\markdown" "D:\Docs\local_markdown"
+```
+
+## 注意事项
+- 脚本会自动创建目标文件夹
+- 支持JPEG、PNG、GIF图片格式
+- 自动处理文件名冲突
+- 包含错误处理和重试机制
+- 源文件夹必须包含.md文件
+- 需要网络连接来下载图片
+- 确保有足够的文件权限
 
 ## 版本信息
 
