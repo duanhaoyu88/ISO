@@ -3,22 +3,23 @@
 ## 📋 分支概述
 本分支专门存放ISO 14230 (KWP2000 - Keyword Protocol 2000) 诊断协议相关的所有文档和资料。
 
-## 🏗️ 文件结构
+## ��️ 文件结构
 ```
-ISO14230/
-├── Documents/          # 原始ISO标准文档
-│   ├── ISO 14230-1完整英文.pdf  # 物理层规范
-│   ├── ISO 14230-2完整英文.pdf  # 数据链路层规范
-│   ├── ISO 14230-3完整英文.pdf  # 应用层规范
-│   └── ISO 14230-4完整英文.pdf  # 排放相关系统要求
-├── Documents Md/       # Markdown格式的ISO文档
-├── Summary/            # 协议摘要和关键信息
-├── Implementation/     # 实现指南和代码示例
-├── Examples/           # 实际应用案例
-├── AI_Query_Guide.md   # AI查询指南和示例
-├── Document_Index.md   # 文档索引
-├── Detailed_Chapter_Index.md  # 详细章节索引
-└── README.md          # 本文件
+ISO14230分支/
+├── README.md                    # 本文件 - 分支概述和指南
+└── ISO14230/                    # ISO 14230协议文档目录
+    ├── Documents/               # 原始ISO标准文档
+    │   ├── ISO 14230-1完整英文.pdf  # 物理层规范
+    │   ├── ISO 14230-2完整英文.pdf  # 数据链路层规范
+    │   ├── ISO 14230-3完整英文.pdf  # 应用层规范
+    │   └── ISO 14230-4完整英文.pdf  # 排放相关系统要求
+    ├── Documents Md/            # Markdown格式的ISO文档
+    ├── Summary/                 # 协议摘要和关键信息
+    ├── Implementation/          # 实现指南和代码示例
+    ├── Examples/                # 实际应用案例
+    ├── AI_Query_Guide.md        # AI查询指南和示例
+    ├── Document_Index.md        # 文档索引
+    └── Detailed_Chapter_Index.md # 详细章节索引
 ```
 
 ## 📚 文档说明
@@ -77,11 +78,11 @@ ISO14230/
 ## 🛠️ 使用指南
 
 ### 开发人员
-1. 查看 `Documents/` 中的原始标准文档
-2. 参考 `Summary/` 中的协议摘要
-3. 使用 `Implementation/` 中的实现指南
-4. 学习 `Examples/` 中的实际案例
-5. 使用 `AI_Query_Guide.md` 进行AI辅助查询
+1. 查看 `ISO14230/Documents/` 中的原始标准文档
+2. 参考 `ISO14230/Summary/` 中的协议摘要
+3. 使用 `ISO14230/Implementation/` 中的实现指南
+4. 学习 `ISO14230/Examples/` 中的实际案例
+5. 使用 `ISO14230/AI_Query_Guide.md` 进行AI辅助查询
 
 ### 研究人员
 - 重点关注协议架构和设计原理
@@ -90,7 +91,7 @@ ISO14230/
 - 利用AI查询指南快速定位技术细节
 
 ### AI工具用户
-- 使用 `AI_Query_Guide.md` 进行标准化查询
+- 使用 `ISO14230/AI_Query_Guide.md` 进行标准化查询
 - 参考查询示例和响应模板
 - 遵循最佳实践提高查询效率
 
@@ -99,6 +100,7 @@ ISO14230/
 - **v1.1.0** - 重新组织文件结构，增加分类目录
 - **v2.0.0** - 新增AI查询指南，合并查询示例和响应模板
 - **v2.1.0** - 新增Documents Md目录，支持Markdown格式文档
+- **v2.2.0** - 调整文件结构，README.md与ISO14230文件夹并列
 
 ## 🔗 相关链接
 - [主仓库](https://github.com/duanhaoyu88/ISO)
