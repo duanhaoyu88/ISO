@@ -1,0 +1,3 @@
+[submodule "Image_Processor"]
+	path = Image_Processor
+	url = https://github.com/duanhaoyu88/Image_Processor.git
