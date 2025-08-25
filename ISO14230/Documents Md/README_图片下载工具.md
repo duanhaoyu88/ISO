@@ -5,7 +5,7 @@
 本工具包含两个脚本，用于从ISO文档中提取和下载图片：
 
 1. **download_images.sh** - Bash脚本（适用于Linux/Mac/Git Bash）
-2. **download_images.py** - Python脚本（跨平台通用）
+2. **download_images.py** - Python脚本（跨平台通用，**推荐使用**）
 
 ## Python脚本使用说明
 
@@ -15,6 +15,7 @@
 - ✅ 自动创建images文件夹
 - ✅ 智能文件名提取
 - ✅ 图片文件完整性验证
+- ✅ **自动替换MD文档中的CDN链接为本地链接**
 - ✅ 详细的下载报告
 - ✅ 错误处理和重试机制
 - ✅ 跨平台兼容
@@ -27,7 +28,7 @@ pip install -r requirements.txt
 
 ### 使用方法
 
-#### 1. 基本使用（使用默认image_urls.txt文件）
+#### 1. 基本使用（使用默认image_urls.txt文件和*.md文件）
 
 ```bash
 python download_images.py
@@ -39,10 +40,18 @@ python download_images.py
 python download_images.py my_urls.txt
 ```
 
-#### 3. 在不同目录中使用
+#### 3. 指定URL文件和Markdown文件模式
 
 ```bash
-python download_images.py /path/to/urls.txt
+python download_images.py my_urls.txt "*.md"
+python download_images.py my_urls.txt "ISO*.md"
+python download_images.py my_urls.txt "**/*.md"  # 递归搜索
+```
+
+#### 4. 在不同目录中使用
+
+```bash
+python download_images.py /path/to/urls.txt "/path/to/*.md"
 ```
 
 ### URL文件格式
@@ -68,9 +77,29 @@ https://cdn-mineru.openxlab.org.cn/result/2025-08-22/xxx/image1.jpg
 ![](https://cdn-mineru.openxlab.org.cn/result/2025-08-22/xxx/image2.jpg)
 ```
 
+### 自动链接替换功能
+
+脚本会自动执行以下操作：
+
+1. **下载图片** - 从URL下载图片到images文件夹
+2. **验证图片** - 检查下载的图片是否有效
+3. **替换链接** - 自动将MD文档中的CDN链接替换为本地链接
+
+#### 替换示例
+
+**替换前：**
+```markdown
+![](https://cdn-mineru.openxlab.org.cn/result/2025-08-22/xxx/image1.jpg)
+```
+
+**替换后：**
+```markdown
+![](images/image1.jpg)
+```
+
 ### 输出结果
 
-脚本会在当前目录下创建`images`文件夹，并下载所有图片。
+脚本会在当前目录下创建`images`文件夹，并下载所有图片，同时自动更新MD文档中的图片链接。
 
 ### 示例输出
 
@@ -89,6 +118,17 @@ https://cdn-mineru.openxlab.org.cn/result/2025-08-22/xxx/image1.jpg
 ✓ 下载完成: image1.jpg (22938 bytes)
 
 ...
+
+正在更新Markdown文件中的图片链接...
+找到 4 个Markdown文件
+处理文件: ISO 14230-1完整英文.md
+  ✓ 替换: https://cdn-mineru.openxlab.org.cn/result/2025-08-22/xxx/image1.jpg -> images/image1.jpg
+  ✓ 文件已更新，替换了 3 个链接
+处理文件: ISO 14230-2完整英文.md
+  ✓ 替换: https://cdn-mineru.openxlab.org.cn/result/2025-08-22/xxx/image2.jpg -> images/image2.jpg
+  ✓ 文件已更新，替换了 15 个链接
+
+✓ 总共替换了 27 个图片链接
 
 ============================================================
 下载完成报告
@@ -121,6 +161,7 @@ chmod +x download_images.sh
 - 使用curl命令下载
 - 支持断点续传
 - 自动创建images目录
+- **注意：Bash脚本不包含自动链接替换功能**
 
 ## 在不同分支中使用
 
@@ -140,12 +181,14 @@ cp README_图片下载工具.md /path/to/new/iso/folder/
 
 在新分支中创建`image_urls.txt`文件，包含该ISO文档的图片URL。
 
-### 3. 运行下载
+### 3. 运行下载（推荐使用Python脚本）
 
 ```bash
 cd /path/to/new/iso/folder/
 python download_images.py
 ```
+
+**优势：** Python脚本会自动更新MD文档中的图片链接，无需手动操作。
 
 ## 故障排除
 
@@ -168,6 +211,11 @@ python download_images.py
    - 确保URL文件使用UTF-8编码
    - 检查URL格式是否正确
 
+5. **链接替换问题**
+   - 确保MD文件使用UTF-8编码
+   - 检查文件是否有写入权限
+   - 验证图片URL格式是否正确
+
 ### 调试模式
 
 在Python脚本中添加调试信息：
@@ -184,3 +232,4 @@ logging.basicConfig(level=logging.DEBUG)
 - v1.1.0 - 添加图片完整性验证
 - v1.2.0 - 支持Markdown图片语法
 - v1.3.0 - 添加详细报告和错误处理
+- **v1.4.0 - 新增自动替换MD文档中图片链接功能**

@@ -5,17 +5,19 @@
 用于从image_urls.txt文件读取图片链接并下载到images文件夹
 
 使用方法:
-    python download_images.py [image_urls_file]
+    python download_images.py [image_urls_file] [markdown_files]
 
 参数:
     image_urls_file: 包含图片URL的文件路径，默认为'image_urls.txt'
+    markdown_files: 需要更新图片链接的Markdown文件，支持通配符，默认为'*.md'
 
 功能:
     1. 读取指定文件中的图片URL
     2. 创建images文件夹（如果不存在）
     3. 下载所有图片到images文件夹
     4. 验证下载的图片完整性
-    5. 生成下载报告
+    5. 自动替换MD文档中的CDN链接为本地链接
+    6. 生成下载报告
 """
 
 import os
@@ -23,18 +25,21 @@ import sys
 import re
 import requests
 import time
+import glob
 from pathlib import Path
 from urllib.parse import urlparse
 import hashlib
 
 class ImageDownloader:
-    def __init__(self, urls_file='image_urls.txt', output_dir='images'):
+    def __init__(self, urls_file='image_urls.txt', output_dir='images', md_pattern='*.md'):
         self.urls_file = urls_file
         self.output_dir = output_dir
+        self.md_pattern = md_pattern
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
+        self.downloaded_files = {}  # 存储URL到本地文件名的映射
         
     def extract_filename_from_url(self, url):
         """从URL中提取文件名"""
@@ -130,6 +135,60 @@ class ImageDownloader:
         except Exception:
             return False
     
+    def update_markdown_links(self):
+        """更新Markdown文件中的图片链接"""
+        print(f"\n正在更新Markdown文件中的图片链接...")
+        
+        # 查找所有匹配的Markdown文件
+        md_files = glob.glob(self.md_pattern)
+        if not md_files:
+            print(f"警告: 没有找到匹配的Markdown文件: {self.md_pattern}")
+            return
+        
+        print(f"找到 {len(md_files)} 个Markdown文件")
+        
+        total_replacements = 0
+        
+        for md_file in md_files:
+            try:
+                print(f"处理文件: {md_file}")
+                
+                # 读取文件内容
+                with open(md_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                original_content = content
+                file_replacements = 0
+                
+                # 替换所有已下载的图片链接
+                for url, local_filename in self.downloaded_files.items():
+                    # 替换Markdown图片语法中的URL
+                    old_pattern = f'![]({url})'
+                    new_pattern = f'![](images/{local_filename})'
+                    if old_pattern in content:
+                        content = content.replace(old_pattern, new_pattern)
+                        file_replacements += 1
+                        print(f"  ✓ 替换: {url} -> images/{local_filename}")
+                    
+                    # 替换纯URL（如果不是Markdown语法）
+                    if url in content and f'![]({url})' not in content:
+                        # 这里可以添加其他替换逻辑，比如HTML img标签等
+                        pass
+                
+                # 如果内容有变化，写回文件
+                if content != original_content:
+                    with open(md_file, 'w', encoding='utf-8') as f:
+                        f.write(content)
+                    print(f"  ✓ 文件已更新，替换了 {file_replacements} 个链接")
+                    total_replacements += file_replacements
+                else:
+                    print(f"  - 文件无需更新")
+                    
+            except Exception as e:
+                print(f"  ✗ 处理文件 {md_file} 时出错: {e}")
+        
+        print(f"\n✓ 总共替换了 {total_replacements} 个图片链接")
+    
     def run(self):
         """运行下载程序"""
         print("=" * 60)
@@ -154,7 +213,6 @@ class ImageDownloader:
         print("\n开始下载图片...")
         successful_downloads = 0
         failed_downloads = 0
-        downloaded_files = []
         
         for i, url in enumerate(urls, 1):
             print(f"\n[{i}/{len(urls)}] 处理: {url}")
@@ -164,7 +222,7 @@ class ImageDownloader:
                 filepath = os.path.join(self.output_dir, filename)
                 if self.validate_image_file(filepath):
                     successful_downloads += 1
-                    downloaded_files.append(filename)
+                    self.downloaded_files[url] = filename
                 else:
                     print(f"警告: {filename} 不是有效的图片文件")
                     failed_downloads += 1
@@ -173,6 +231,10 @@ class ImageDownloader:
             
             # 添加延迟避免请求过快
             time.sleep(0.5)
+        
+        # 更新Markdown文件中的链接
+        if successful_downloads > 0:
+            self.update_markdown_links()
         
         # 生成报告
         print("\n" + "=" * 60)
@@ -183,9 +245,9 @@ class ImageDownloader:
         print(f"下载失败: {failed_downloads}")
         print(f"成功率: {successful_downloads/len(urls)*100:.1f}%")
         
-        if downloaded_files:
+        if self.downloaded_files:
             print(f"\n成功下载的文件:")
-            for filename in downloaded_files:
+            for url, filename in self.downloaded_files.items():
                 filepath = os.path.join(self.output_dir, filename)
                 file_size = os.path.getsize(filepath)
                 print(f"  - {filename} ({file_size} bytes)")
@@ -196,11 +258,15 @@ def main():
     """主函数"""
     # 解析命令行参数
     urls_file = 'image_urls.txt'
+    md_pattern = '*.md'
+    
     if len(sys.argv) > 1:
         urls_file = sys.argv[1]
+    if len(sys.argv) > 2:
+        md_pattern = sys.argv[2]
     
     # 创建下载器并运行
-    downloader = ImageDownloader(urls_file)
+    downloader = ImageDownloader(urls_file, md_pattern=md_pattern)
     downloader.run()
 
 if __name__ == "__main__":
