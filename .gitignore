@@ -1,0 +1,42 @@
+# 排除官网文件夹（不追踪，不上传）
+官网/
+*/官网/
+**/官网/
+
+# 排除临时文件
+*.tmp
+*.temp
+*.log
+
+# 排除Python缓存文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# 排除IDE文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 排除系统文件
+.DS_Store
+Thumbs.db
+
+# 排除下载的图片文件（可选，根据需要调整）
+# Image_Processor/images/
+# *.jpg
+# *.png
+# *.gif
+
+# 排除生成的列表文件（可选，根据需要调整）
+# Image_Processor/image_urls.txt
+# Image_Processor/unique_images.txt
+
+# 排除其他临时文件
+*.bak
+*.backup
+*.old
